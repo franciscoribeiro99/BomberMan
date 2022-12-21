@@ -1,6 +1,6 @@
 object Test12 extends App {
 
-  print("hello world5")
+  print("hello world51")
 }
 
 
