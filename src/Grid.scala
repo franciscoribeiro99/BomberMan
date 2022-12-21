@@ -2,12 +2,12 @@ class Grid {
   //implemente la zone de jeu 12x7
   val gridX = 9
   val gridY = 11
-  val ret: Array[Array[String]] = Array.ofDim(gridX, gridY)
+  val grille: Array[Array[String]] = Array.ofDim(gridX, gridY)
 
   def initGrid(): Unit = {
     for (i <- 0 until gridX)
       for (j <- 0 until gridY) {
-        ret(i)(j) = "x"
+        grille(i)(j) = "x"
       }
   }
 
@@ -15,7 +15,7 @@ class Grid {
     var retS: String = ""
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
-        retS += s"${ret(i)(j)} \t"
+        retS += s"${grille(i)(j)} \t"
       }
       retS += "\n"
     }
@@ -28,7 +28,12 @@ class Grid {
     var randomY=0
     var placesfound: Int = 0
     do {
-      randomX=Math.random().toInt
+      randomX=(Math.random()*gridX).toInt
+      randomY=(Math.random()*gridY).toInt
+     if(grille(randomX)(randomY)!= "0"){
+       placesfound+=1
+       grille(randomX)(randomY)="1"
+     }
     } while (placesfound < 5)
   }
 
@@ -38,7 +43,7 @@ class Grid {
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
         if (i == 0 || j == 0 || i == gridX - 1 || j == gridY - 1 || i % 2 == 0 && j % 2 == 0)
-          ret(i)(j) = "0"
+          grille(i)(j) = "0"
       }
     }
 
