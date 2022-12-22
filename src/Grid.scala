@@ -1,9 +1,12 @@
+import scala.util.Random
+
 class Grid {
   //implemente la zone de jeu 12x7
   val gridX = 13
   val gridY = 18
   val grille: Array[Array[String]] = Array.ofDim(gridX, gridY)
 
+  //initialise la grille
   def initGrid(): Unit = {
     for (i <- 0 until gridX)
       for (j <- 0 until gridY) {
@@ -11,6 +14,7 @@ class Grid {
       }
   }
 
+  //affiche la grille sur la console
   def displayGrid(): String = {
     var retS: String = ""
     for (i <- 0 until gridX) {
@@ -22,7 +26,7 @@ class Grid {
     retS
   }
 
-  //fonction qui implemente les murs non statiques non détruisable donc pas au début de tableau--> marta
+  //fonction qui implemente les murs non statiques non détruisable donc pas au début de tableau
   def setRemovalWall(): Unit = {
     var randomX = 0
     var randomY = 0
@@ -51,6 +55,21 @@ class Grid {
 
   def addPlayer(): Unit = {
     grille(1)(1) = "2"
+  }
+
+  //fonction pour créer un énemy
+  def createEnemy(times: Int): Unit = {
+    val r = new Random()
+    var actualtime = 0
+    for (i <- grille.indices; j <- (grille(i).length / 2) until grille(i).length) {
+
+      if (actualtime < times) {
+        if (grille(i)(j) == "x" && r.nextInt(2) == 0) {
+          actualtime += 1
+          grille(i)(j) = "E"
+        }
+      }
+    }
   }
 
 }

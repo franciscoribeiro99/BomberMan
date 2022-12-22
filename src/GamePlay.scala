@@ -5,5 +5,6 @@ object GamePlay extends App {
   grid1.setWall()
   grid1.addPlayer()
   grid1.setRemovalWall()
+  grid1.createEnemy(4)
   println(grid1.displayGrid())
 }
