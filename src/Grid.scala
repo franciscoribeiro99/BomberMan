@@ -72,4 +72,26 @@ class Grid {
     }
   }
 
+  //to move the man
+  def move(): Unit = {
+    var read: Char = Input.readChar()
+    for (i <- 0 until gridX) {
+      for (j <- 0 until gridY) {
+        if(grille(i)(j)=="2" && i!=0 && i!=gridX-1 && j!=0 && j!=gridY-1){
+          read match {
+            case 'a' => grille(i)(j-1)="2"
+                        grille(i)(j)="x"
+            case 's' => grille(i)(j+1) = "2"
+                        grille(i)(j) = "x"
+            case 'z' => grille(i+1)(j) = "2"
+                        grille(i)(j) = "x"
+            case 'w' => grille(i-1)(j) = "2"
+                        grille(i)(j) = "x"
+            case _  =>  grille(i)(j)="2"
+          }
+        }
+       }
+      }
+    }
+
 }
