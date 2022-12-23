@@ -87,7 +87,7 @@ class Grid {
                         grille(i)(j) = "x"
             case 'w' => grille(i-1)(j) = "2"
                         grille(i)(j) = "x"
-            case _  =>  grille(i)(j)="2"
+            case _  =>
           }
         }
        }
