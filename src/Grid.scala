@@ -10,7 +10,7 @@ class Grid {
   def initGrid(): Unit = {
     for (i <- 0 until gridX)
       for (j <- 0 until gridY) {
-        grille(i)(j) = "x"
+        grille(i)(j) = " "
       }
   }
 
@@ -36,7 +36,7 @@ class Grid {
       randomY = (Math.random() * gridY).toInt
       if (grille(randomX)(randomY) != "0" && grille(randomX)(randomY) != "2") {
         placesfound += 1
-        grille(randomX)(randomY) = "1"
+        grille(randomX)(randomY) = "W"
       }
     } while (placesfound < 5)
   }
@@ -64,7 +64,7 @@ class Grid {
     for (i <- grille.indices; j <- (grille(i).length / 2) until grille(i).length) {
 
       if (actualtime < times) {
-        if (grille(i)(j) == "x" && r.nextInt(2) == 0) {
+        if (grille(i)(j) == " " && r.nextInt(2) == 0) {
           actualtime += 1
           grille(i)(j) = "E"
         }
@@ -86,30 +86,30 @@ class Grid {
       }
     }
     read match {
-      case 'w' => if (grille(r - 1)(c) == "x") {
+      case 'w' => if (grille(r - 1)(c) == " ") {
         grille(r - 1)(c) = "2"
-        grille(r)(c) = "x"
+        grille(r)(c) = " "
       }
       else {
         println("It's not possible")
       }
-      case 's' => if (grille(r + 1)(c) == "x") {
+      case 's' => if (grille(r + 1)(c) == " ") {
         grille(r + 1)(c) = "2"
-        grille(r)(c) = "x"
+        grille(r)(c) = " "
       }
       else {
         println("It's not possible")
       }
-      case 'a' => if (grille(r)(c - 1) == "x") {
+      case 'a' => if (grille(r)(c - 1) == " ") {
         grille(r)(c - 1) = "2"
-        grille(r)(c) = "x"
+        grille(r)(c) = " "
       }
       else {
         println("It's not possible")
       }
-      case 'd' => if (grille(r)(c + 1) == "x") {
+      case 'd' => if (grille(r)(c + 1) == " ") {
         grille(r)(c + 1) = "2"
-        grille(r)(c) = "x"
+        grille(r)(c) = " "
       }
       else {
         println("It's not possible")
