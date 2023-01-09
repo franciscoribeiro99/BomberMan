@@ -75,43 +75,49 @@ class Grid {
   //to move the man
   def move(): Unit = {
     var read: Char = Input.readChar()
+    var r = 0
+    var c = 0
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
-        if(grille(i)(j)=="2"){
-          read match {
-            case 'w' => if(grille (i-1)(j)=="x"){
-              grille(i-1)(j)="2"
-              grille(i)(j)="x"
-            }
-            else{
-              println("It's not possible")
-            }
-            case 's' => if(grille (i+1)(j)=="x"){
-              grille(i+1)(j)="2"
-              grille(i)(j)="x"
-            }
-            else{
-              println("It's not possible")
-            }
-            case 'a' => if(grille (i)(j-1)=="x"){
-              grille(i)(j-1)="2"
-              grille(i)(j)="x"
-            }
-            else{
-              println("It's not possible")
-            }
-            case 'd' => if(grille (i)(j+1)=="x"){
-              grille(i)(j+1)="2"
-              grille(i)(j)="x"
-            }
-            else{
-              println("It's not possible")
-            }
-            case _  =>println("Allowed touches are a s d w")
-          }
+        if (grille(i)(j) == "2") {
+          r = i
+          c = j
         }
-       }
       }
     }
+    read match {
+      case 'w' => if (grille(r - 1)(c) == "x") {
+        grille(r - 1)(c) = "2"
+        grille(r)(c) = "x"
+      }
+      else {
+        println("It's not possible")
+      }
+      case 's' => if (grille(r + 1)(c) == "x") {
+        grille(r + 1)(c) = "2"
+        grille(r)(c) = "x"
+      }
+      else {
+        println("It's not possible")
+      }
+      case 'a' => if (grille(r)(c - 1) == "x") {
+        grille(r)(c - 1) = "2"
+        grille(r)(c) = "x"
+      }
+      else {
+        println("It's not possible")
+      }
+      case 'd' => if (grille(r)(c + 1) == "x") {
+        grille(r)(c + 1) = "2"
+        grille(r)(c) = "x"
+      }
+      else {
+        println("It's not possible")
+      }
+      case _ => println("Allowed touches are a s d w")
+    }
+
+  }
+
 
 }
