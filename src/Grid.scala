@@ -77,17 +77,37 @@ class Grid {
     var read: Char = Input.readChar()
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
-        if(grille(i)(j)=="2" && i!=0 && i!=gridX-1 && j!=0 && j!=gridY-1){
+        if(grille(i)(j)=="2"){
           read match {
-            case 'a' => grille(i)(j-1)="2"
-                        grille(i)(j)="x"
-            case 's' => grille(i)(j+1) = "2"
-                        grille(i)(j) = "x"
-            case 'z' => grille(i+1)(j) = "2"
-                        grille(i)(j) = "x"
-            case 'w' => grille(i-1)(j) = "2"
-                        grille(i)(j) = "x"
-            case _  =>
+            case 'w' => if(grille (i-1)(j)=="x"){
+              grille(i-1)(j)="2"
+              grille(i)(j)="x"
+            }
+            else{
+              println("It's not possible")
+            }
+            case 's' => if(grille (i+1)(j)=="x"){
+              grille(i+1)(j)="2"
+              grille(i)(j)="x"
+            }
+            else{
+              println("It's not possible")
+            }
+            case 'a' => if(grille (i)(j-1)=="x"){
+              grille(i)(j-1)="2"
+              grille(i)(j)="x"
+            }
+            else{
+              println("It's not possible")
+            }
+            case 'd' => if(grille (i)(j+1)=="x"){
+              grille(i)(j+1)="2"
+              grille(i)(j)="x"
+            }
+            else{
+              println("It's not possible")
+            }
+            case _  =>println("Allowed touches are a s d w")
           }
         }
        }
