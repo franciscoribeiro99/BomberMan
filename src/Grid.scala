@@ -12,13 +12,19 @@ class Grid {
   val display = new FunGraphics(950, 750, "BomberMan")
 
   //images
+
   val grass = new GraphicsBitmap("/img/grass.jpg")
   val woodBox = new GraphicsBitmap("/img/WoodBox.png")
   val StoneWall = new GraphicsBitmap("/img/StoneWall.png")
   val BomberMan = new GraphicsBitmap("/img/Bomberman.png")
+  val Enemy = new GraphicsBitmap("/img/ennemy.png")
+  val Logo = new GraphicsBitmap("/img/logo.png")
+
+
 
   def updateGraphics(): Unit = {
     val i1 = 50
+    display.drawPicture(200,75 , Logo)
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
         display.drawPicture(j * i1 + 25, 125 + i * i1, grass)
@@ -26,10 +32,8 @@ class Grid {
           case "0" => display.drawPicture(j * i1 + 25, 125 + i * i1, StoneWall)
           case "2" => display.drawPicture(j * i1 + 25, 125 + i * i1, BomberMan)
           case " " =>
-          case "E" => display.setColor(Color.red)
-            display.drawFillRect(j * i1, 100 + i * i1, i1, i1)
+          case "E" => display.drawPicture(j * i1 + 25, 125 + i * i1, Enemy)
           case "W" => display.drawPicture(j * i1 + 25, 125 + i * i1, woodBox)
-
         }
 
       }
@@ -89,9 +93,9 @@ class Grid {
 
   //fonction pour créer un énemy
   def createEnemy(times: Int): Unit = {
-    grille(2)(15)="E"
-    grille(5)(15)="E"
-    grille(9)(15)="E"
+    grille(2)(15) = "E"
+    grille(5)(15) = "E"
+    grille(9)(15) = "E"
 
     var actualtime = 0
     /* for (i <- grille.indices; j <- (grille(i).length / 2) until grille(i).length) {
@@ -107,6 +111,7 @@ class Grid {
   //to move the man
   var memx = 0
   var memy = 0
+
   def move(): Unit = {
     var read: Char = Input.readChar()
     var random = new Random()
@@ -153,17 +158,18 @@ class Grid {
       else {
         println("It's not possible")
       }
-      case 'x' =>   grille(memx)(memy) = "2"
-                    grille(r)(c) = "X"
-                    moveenemy()
+      case 'x' => grille(memx)(memy) = "2"
+        grille(r)(c) = "X"
+        moveenemy()
       case _ => println("Allowed touches are a s d w")
-                moveenemy()
+        moveenemy()
     }
     memx = r
     memy = c
-      println(memx)
+    println(memx)
   }
-  def moveenemy():Unit= {
+
+  def moveenemy(): Unit = {
     var r = new Random()
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
@@ -191,7 +197,8 @@ class Grid {
       }
     }
   }
+
   def placebomb(): Unit = {
 
-    }
+  }
 }
