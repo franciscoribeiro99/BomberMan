@@ -2,6 +2,10 @@ import hevs.graphics.FunGraphics
 import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration._
+import scala.concurrent.duration.DurationInt
 import scala.util.Random
 
 class Grid {
@@ -21,19 +25,20 @@ class Grid {
   val Logo = new GraphicsBitmap("/img/logo.png")
 
 
-
   def updateGraphics(): Unit = {
     val i1 = 50
-    display.drawPicture(200,75 , Logo)
+    display.drawPicture(200, 75, Logo)
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
         display.drawPicture(j * i1 + 25, 125 + i * i1, grass)
         grille(i)(j) match {
+
           case "0" => display.drawPicture(j * i1 + 25, 125 + i * i1, StoneWall)
           case "2" => display.drawPicture(j * i1 + 25, 125 + i * i1, BomberMan)
           case " " =>
           case "E" => display.drawPicture(j * i1 + 25, 125 + i * i1, Enemy)
           case "W" => display.drawPicture(j * i1 + 25, 125 + i * i1, woodBox)
+          case "X" => display.drawPicture(j * i1 + 25, 125 + i * i1, woodBox)
         }
 
       }
@@ -97,20 +102,15 @@ class Grid {
     grille(5)(15) = "E"
     grille(9)(15) = "E"
 
-    var actualtime = 0
-    /* for (i <- grille.indices; j <- (grille(i).length / 2) until grille(i).length) {
 
-       if (actualtime < times) {
-         if (grille(i)(j) == " " && r.nextInt(2) == 0) {
-           actualtime += 1
-           grille(i)(j) = "E"
-         }
-       }*/
   }
 
   //to move the man
   var memx = 0
   var memy = 0
+  var counter1: Long = 0
+  var membombx = 0
+  var membomby = 0
 
   def move(): Unit = {
     var read: Char = Input.readChar()
@@ -158,47 +158,65 @@ class Grid {
       else {
         println("It's not possible")
       }
-      case 'x' => grille(memx)(memy) = "2"
-        grille(r)(c) = "X"
-        moveenemy()
-      case _ => println("Allowed touches are a s d w")
-        moveenemy()
-    }
-    memx = r
-    memy = c
-    println(memx)
-  }
+      case 'x' =>
 
-  def moveenemy(): Unit = {
-    var r = new Random()
-    for (i <- 0 until gridX) {
-      for (j <- 0 until gridY) {
-        if (grille(i)(j) == "E") {
-          r.nextInt(3) match {
-            case 0 => if (grille(i - 1)(j) == " ") {
-              grille(i - 1)(j) = "E"
-              grille(i)(j) = " "
+        membombx = r
+        membomby = c
+        bomb(r, c)
+        val start = System.currentTimeMillis()
+        Thread.sleep(5000)
+          explosion()
+          moveenemy()
+          case _ =>
+            println("Allowed touches are a s d w")
+            moveenemy()
+        }
+        memx = r
+        memy = c
+    }
+
+
+    //creates a bom
+    def bomb(x: Int, y: Int): Unit = {
+      grille(x)(y) = "X"
+      grille(memx)(memy) = "2"
+
+    }
+
+    def explosion(): Unit = {
+      println(membombx)
+      println(membomby)
+      grille(membombx)(membomby) = " "
+    }
+
+    def moveenemy(): Unit = {
+      var r = new Random()
+      for (i <- 0 until gridX) {
+        for (j <- 0 until gridY) {
+          if (grille(i)(j) == "E") {
+            r.nextInt(3) match {
+              case 0 => if (grille(i - 1)(j) == " ") {
+                grille(i - 1)(j) = "E"
+                grille(i)(j) = " "
+              }
+              case 1 => if (grille(i + 1)(j) == " ") {
+                grille(i + 1)(j) = "E"
+                grille(i)(j) = " "
+              }
+              case 2 => if (grille(i)(j - 1) == " ") {
+                grille(i)(j - 1) = "E"
+                grille(i)(j) = " "
+              }
+              case 3 => if (grille(i)(j + 1) == " ") {
+                grille(i)(j + 1) = "E"
+                grille(i)(j) = " "
+              }
+              case _ =>
             }
-            case 1 => if (grille(i + 1)(j) == " ") {
-              grille(i + 1)(j) = "E"
-              grille(i)(j) = " "
-            }
-            case 2 => if (grille(i)(j - 1) == " ") {
-              grille(i)(j - 1) = "E"
-              grille(i)(j) = " "
-            }
-            case 3 => if (grille(i)(j + 1) == " ") {
-              grille(i)(j + 1) = "E"
-              grille(i)(j) = " "
-            }
-            case _ =>
           }
         }
       }
     }
-  }
 
-  def placebomb(): Unit = {
 
   }
-}
