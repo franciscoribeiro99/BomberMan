@@ -15,17 +15,17 @@ class Grid {
   val grass = new GraphicsBitmap("/img/grass.jpg")
   val woodBox = new GraphicsBitmap("/img/WoodBox.png")
   val StoneWall = new GraphicsBitmap("/img/StoneWall.png")
+  val BomberMan = new GraphicsBitmap("/img/Bomberman.png")
 
   def updateGraphics(): Unit = {
     val i1 = 50
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
+        display.drawPicture(j * i1 + 25, 125 + i * i1, grass)
         grille(i)(j) match {
           case "0" => display.drawPicture(j * i1 + 25, 125 + i * i1, StoneWall)
-
-          case "2" => display.setColor(Color.yellow)
-            display.drawFillRect(j * i1, 100 + i * i1, i1, i1)
-          case " " => display.drawPicture(j * i1 + 25, 125 + i * i1, grass)
+          case "2" => display.drawPicture(j * i1 + 25, 125 + i * i1, BomberMan)
+          case " " =>
           case "E" => display.setColor(Color.red)
             display.drawFillRect(j * i1, 100 + i * i1, i1, i1)
           case "W" => display.drawPicture(j * i1 + 25, 125 + i * i1, woodBox)
