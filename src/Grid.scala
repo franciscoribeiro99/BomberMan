@@ -195,14 +195,13 @@ class Grid {
         println("It's not possible")
       }
       case 'x' =>
+        bomb(r, c)
         membombx = r
         membomby = c
-        bomb(r, c)
       case _ =>
         println("Allowed touches are a s d w")
 
     }
-
     memx = r
     memy = c
   }
@@ -211,6 +210,11 @@ class Grid {
   //creates a bomb
   def bomb(x: Int, y: Int): Unit = {
     grille(x)(y) = "B"
+    print(memx)
+    println(memy)
+    if(memx == 0 && memy == 0)
+      grille(1)(2) = "2"
+    else
     grille(memx)(memy) = "2"
     timetoexplosion = 1
 
