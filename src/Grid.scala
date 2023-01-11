@@ -1,13 +1,6 @@
 import hevs.graphics.FunGraphics
 import hevs.graphics.utils.GraphicsBitmap
-
-import java.awt.Color
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration._
-import scala.concurrent.duration.DurationInt
 import scala.util.Random
-import hevs.graphics.FunGraphics
 import java.awt.event.{KeyAdapter, KeyEvent}
 
 class Grid {
@@ -125,8 +118,7 @@ class Grid {
   var membomby = 0
 
   def move(lettre: Char): Unit = {
-    var read: Char = lettre
-    var random = new Random()
+    val read: Char = lettre
     var r = 0
     var c = 0
     for (i <- 0 until gridX) {
