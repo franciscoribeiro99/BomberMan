@@ -7,6 +7,8 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration._
 import scala.concurrent.duration.DurationInt
 import scala.util.Random
+import hevs.graphics.FunGraphics
+import java.awt.event.{KeyAdapter, KeyEvent}
 
 class Grid {
   //implemente la zone de jeu 12x7
@@ -24,15 +26,24 @@ class Grid {
   val Enemy = new GraphicsBitmap("/img/ennemy.png")
   val Logo = new GraphicsBitmap("/img/logo.png")
 
+  display.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
+    override def keyPressed(e: KeyEvent): Unit = {
+      if (e.getKeyCode == KeyEvent.VK_UP) move('w')
+      if (e.getKeyCode == KeyEvent.VK_DOWN) move('s')
+      if (e.getKeyCode == KeyEvent.VK_LEFT) move('a')
+      if (e.getKeyCode == KeyEvent.VK_RIGHT) move('d')
+    }
+  })
+
 
   def updateGraphics(): Unit = {
     val i1 = 50
-    display.drawPicture(200, 75, Logo)
+    display.syncGameLogic(60)
+
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
         display.drawPicture(j * i1 + 25, 125 + i * i1, grass)
         grille(i)(j) match {
-
           case "0" => display.drawPicture(j * i1 + 25, 125 + i * i1, StoneWall)
           case "2" => display.drawPicture(j * i1 + 25, 125 + i * i1, BomberMan)
           case " " =>
@@ -43,6 +54,7 @@ class Grid {
 
       }
     }
+    display.drawPicture(display.width / 2, 75, Logo)
   }
 
   //initialise la grille
@@ -112,8 +124,8 @@ class Grid {
   var membombx = 0
   var membomby = 0
 
-  def move(): Unit = {
-    var read: Char = Input.readChar()
+  def move(lettre: Char): Unit = {
+    var read: Char = lettre
     var random = new Random()
     var r = 0
     var c = 0
@@ -165,58 +177,59 @@ class Grid {
         bomb(r, c)
         val start = System.currentTimeMillis()
         Thread.sleep(5000)
-          explosion()
-          moveenemy()
-          case _ =>
-            println("Allowed touches are a s d w")
-            moveenemy()
-        }
-        memx = r
-        memy = c
+        explosion()
+        moveenemy()
+      case _ =>
+        println("Allowed touches are a s d w")
+        moveenemy()
     }
+    memx = r
+    memy = c
+  }
 
 
-    //creates a bom
-    def bomb(x: Int, y: Int): Unit = {
-      grille(x)(y) = "X"
-      grille(memx)(memy) = "2"
+  //creates a bom
+  def bomb(x: Int, y: Int): Unit = {
+    grille(x)(y) = "X"
+    grille(memx)(memy) = "2"
 
-    }
+  }
 
-    def explosion(): Unit = {
-      println(membombx)
-      println(membomby)
-      grille(membombx)(membomby) = " "
-    }
+  def explosion(): Unit = {
+    println(membombx)
+    println(membomby)
+    grille(membombx)(membomby) = " "
+  }
 
-    def moveenemy(): Unit = {
-      var r = new Random()
-      for (i <- 0 until gridX) {
-        for (j <- 0 until gridY) {
-          if (grille(i)(j) == "E") {
-            r.nextInt(3) match {
-              case 0 => if (grille(i - 1)(j) == " ") {
-                grille(i - 1)(j) = "E"
-                grille(i)(j) = " "
-              }
-              case 1 => if (grille(i + 1)(j) == " ") {
-                grille(i + 1)(j) = "E"
-                grille(i)(j) = " "
-              }
-              case 2 => if (grille(i)(j - 1) == " ") {
-                grille(i)(j - 1) = "E"
-                grille(i)(j) = " "
-              }
-              case 3 => if (grille(i)(j + 1) == " ") {
-                grille(i)(j + 1) = "E"
-                grille(i)(j) = " "
-              }
-              case _ =>
+  //l'énemi doit toujours bouger!
+  def moveenemy(): Unit = {
+    var r = new Random()
+    for (i <- 0 until gridX) {
+      for (j <- 0 until gridY) {
+        if (grille(i)(j) == "E") {
+          r.nextInt(3) match {
+            case 0 => if (grille(i - 1)(j) == " ") {
+              grille(i - 1)(j) = "E"
+              grille(i)(j) = " "
             }
+            case 1 => if (grille(i + 1)(j) == " ") {
+              grille(i + 1)(j) = "E"
+              grille(i)(j) = " "
+            }
+            case 2 => if (grille(i)(j - 1) == " ") {
+              grille(i)(j - 1) = "E"
+              grille(i)(j) = " "
+            }
+            case 3 => if (grille(i)(j + 1) == " ") {
+              grille(i)(j + 1) = "E"
+              grille(i)(j) = " "
+            }
+            case _ =>
           }
         }
       }
     }
-
-
+    updateGraphics()
   }
+}
+

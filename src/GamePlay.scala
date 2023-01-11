@@ -7,11 +7,5 @@ object GamePlay extends App {
   grid1.setRemovalWall()
   println(grid1.displayGrid())
   grid1.updateGraphics()
-  do{
-    grid1.move()
-    grid1.updateGraphics()
-    println(grid1.displayGrid())
-  }while(true)
-
 
 }
