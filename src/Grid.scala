@@ -1,3 +1,4 @@
+
 import hevs.graphics.FunGraphics
 import hevs.graphics.utils.GraphicsBitmap
 
@@ -13,7 +14,7 @@ class Grid {
   var gameover: Boolean = false
   val grille: Array[Array[String]] = Array.ofDim(gridX, gridY)
   val display = new FunGraphics(950, 750, "BomberMan")
-
+  var replay : Boolean = false
   //images
 
   val grass = new GraphicsBitmap("/img/grass.jpg")
@@ -27,7 +28,6 @@ class Grid {
   val gameoverimg = new GraphicsBitmap("/img/gameover.png")
 
 
-
   //liaison avec les touches
   display.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
     override def keyPressed(e: KeyEvent): Unit = {
@@ -36,9 +36,33 @@ class Grid {
       if (e.getKeyCode == KeyEvent.VK_LEFT) move('a')
       if (e.getKeyCode == KeyEvent.VK_RIGHT) move('d')
       if (e.getKeyCode == KeyEvent.VK_SPACE) if (timetoexplosion == 0) move('x')
+      if (e.getKeyCode == KeyEvent.VK_ENTER) if (gameover == true) {
+       replay = true
+      }
+      if (e.getKeyCode == KeyEvent.VK_ESCAPE) if (gameover == true) System.exit(-1)
     }
   })
 
+  def startplay(): Unit = {
+    gameover = false
+    initGrid()
+    setWall()
+    addPlayer()
+    createEnemy()
+    setRemovalWall(10)
+    println(displayGrid())
+    while (true) {
+      Thread.sleep(300)
+      updateGraphics()
+      moveenemy()
+    }
+    updateGraphics()
+
+  }
+
+  def playing(): Unit = {
+
+  }
 
   def updateGraphics(): Unit = {
     val i1 = 50
@@ -212,10 +236,10 @@ class Grid {
     grille(x)(y) = "B"
     print(memx)
     println(memy)
-    if(memx == 0 && memy == 0)
+    if (memx == 0 && memy == 0)
       grille(1)(2) = "2"
     else
-    grille(memx)(memy) = "2"
+      grille(memx)(memy) = "2"
     timetoexplosion = 1
 
   }
@@ -255,42 +279,114 @@ class Grid {
   }
 
   //l'énemi doit toujours bouger!
+  var memE1x = 2
+  var memE1y = 15
+  var memE2x = 5
+  var memE2y = 15
+  var memE3x = 9
+  var memE3y = 15
+
   def moveenemy(): Unit = {
     var r = new Random()
-    for (i <- 0 until gridX) {
-      for (j <- 0 until gridY) {
-        if (grille(i)(j) == "E") {
-          r.nextInt(4) match {
-            case 0 => if (grille(i - 1)(j) == " ") {
-              grille(i - 1)(j) = "E"
-              grille(i)(j) = " "
-            }
-            else if (grille(i - 1)(j) == "2")
-              gameover = true
-            case 1 => if (grille(i + 1)(j) == " ") {
-              grille(i + 1)(j) = "E"
-              grille(i)(j) = " "
-            }
-            else if (grille(i + 1)(j) == "2")
-              gameover = true
-            case 2 => if (grille(i)(j - 1) == " ") {
-              grille(i)(j - 1) = "E"
-              grille(i)(j) = " "
-            }
-            else if (grille(i)(j - 1) == "2")
-              gameover = true
-            case 3 => if (grille(i)(j + 1) == " ") {
-              grille(i)(j + 1) = "E"
-              grille(i)(j) = " "
-            } else if (grille(i)(j + 1) == "2")
-              gameover = true
-            case _ =>
-          }
+    if (grille(memE1x)(memE1y) == "E") {
+      r.nextInt(4) match {
+        case 0 => if (grille(memE1x - 1)(memE1y) == " ") {
+          grille(memE1x - 1)(memE1y) = "E"
+          grille(memE1x)(memE1y) = " "
+          memE1x = memE1x - 1
         }
+        else if (grille(memE1x - 1)(memE1y) == "2")
+          gameover = true
+        case 1 => if (grille(memE1x + 1)(memE1y) == " ") {
+          grille(memE1x + 1)(memE1y) = "E"
+          grille(memE1x)(memE1y) = " "
+          memE1x = memE1x + 1
+        }
+        else if (grille(memE1x + 1)(memE1y) == "2")
+          gameover = true
+        case 2 => if (grille(memE1x)(memE1y - 1) == " ") {
+          grille(memE1x)(memE1y - 1) = "E"
+          grille(memE1x)(memE1y) = " "
+          memE1y = memE1y - 1
+        }
+        else if (grille(memE1x)(memE1y - 1) == "2")
+          gameover = true
+        case 3 => if (grille(memE1x)(memE1y + 1) == " ") {
+          grille(memE1x)(memE1y + 1) = "E"
+          grille(memE1x)(memE1y) = " "
+          memE1y = memE1y + 1
+        } else if (grille(memE1x)(memE1y + 1) == "2")
+          gameover = true
+        case _ =>
+
       }
     }
+    if (grille(memE2x)(memE2y) == "E") {
+      r.nextInt(4) match {
+        case 0 => if (grille(memE2x - 1)(memE2y) == " ") {
+          grille(memE2x - 1)(memE2y) = "E"
+          grille(memE2x)(memE2y) = " "
+          memE2x = memE2x - 1
+        }
+        else if (grille(memE2x - 1)(memE2y) == "2")
+          gameover = true
+        case 1 => if (grille(memE2x + 1)(memE2y) == " ") {
+          grille(memE2x + 1)(memE2y) = "E"
+          grille(memE2x)(memE2y) = " "
+          memE2x = memE2x + 1
+        }
+        else if (grille(memE2x + 1)(memE2y) == "2")
+          gameover = true
+        case 2 => if (grille(memE2x)(memE2y - 1) == " ") {
+          grille(memE2x)(memE2y - 1) = "E"
+          grille(memE2x)(memE2y) = " "
+          memE2y = memE2y - 1
+        }
+        else if (grille(memE2x)(memE2y - 1) == "2")
+          gameover = true
+        case 3 => if (grille(memE2x)(memE2y + 1) == " ") {
+          grille(memE2x)(memE2y + 1) = "E"
+          grille(memE2x)(memE2y) = " "
+          memE2y = memE2y + 1
+        } else if (grille(memE2x)(memE2y + 1) == "2")
+          gameover = true
+        case _ =>
 
+      }
+    }
+    if (grille(memE3x)(memE3y) == "E") {
+      r.nextInt(4) match {
+        case 0 => if (grille(memE3x - 1)(memE3y) == " ") {
+          grille(memE3x - 1)(memE3y) = "E"
+          grille(memE3x)(memE3y) = " "
+          memE3x = memE3x - 1
+        }
+        else if (grille(memE3x - 1)(memE3y) == "2")
+          gameover = true
+        case 1 => if (grille(memE3x + 1)(memE3y) == " ") {
+          grille(memE3x + 1)(memE3y) = "E"
+          grille(memE3x)(memE3y) = " "
+          memE3x = memE3x + 1
+        }
+        else if (grille(memE3x + 1)(memE3y) == "2")
+          gameover = true
+        case 2 => if (grille(memE3x)(memE3y - 1) == " ") {
+          grille(memE3x)(memE3y - 1) = "E"
+          grille(memE3x)(memE3y) = " "
+          memE3y = memE3y - 1
+        }
+        else if (grille(memE3x)(memE3y - 1) == "2")
+          gameover = true
+        case 3 => if (grille(memE3x)(memE3y + 1) == " ") {
+          grille(memE3x)(memE3y + 1) = "E"
+          grille(memE3x)(memE3y) = " "
+          memE3y = memE3y + 1
+        } else if (grille(memE3x)(memE3y + 1) == "2")
+          gameover = true
+        case _ =>
+
+      }
+    }
   }
-
 }
 
