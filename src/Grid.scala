@@ -15,8 +15,9 @@ class Grid {
   val grille: Array[Array[String]] = Array.ofDim(gridX, gridY)
   val display = new FunGraphics(950, 750, "BomberMan")
   var replay : Boolean = false
-  //images
 
+
+  //images
   val grass = new GraphicsBitmap("/img/grass.jpg")
   val woodBox = new GraphicsBitmap("/img/WoodBox.png")
   val StoneWall = new GraphicsBitmap("/img/StoneWall.png")
@@ -43,6 +44,8 @@ class Grid {
     }
   })
 
+
+  //InitPlaymode
   def startplay(): Unit = {
     gameover = false
     initGrid()
@@ -60,10 +63,7 @@ class Grid {
 
   }
 
-  def playing(): Unit = {
-
-  }
-
+//updateGraphics on FunGraphics
   def updateGraphics(): Unit = {
     val i1 = 50
     var NotfoundP = false
@@ -156,6 +156,7 @@ class Grid {
 
   }
 
+//initialise le jouer
   def addPlayer(): Unit = {
     grille(1)(1) = "2"
   }
@@ -173,7 +174,7 @@ class Grid {
   var membombx = 0
   var membomby = 0
 
-
+//fonction pour bouger le player
   def move(lettre: Char): Unit = {
     val read: Char = lettre
     var r = 0
@@ -244,6 +245,8 @@ class Grid {
 
   }
 
+
+  //explosion of the bom who was planted
   def explosion(): Unit = {
     grille(membombx)(membomby) = "r"
 
@@ -258,9 +261,9 @@ class Grid {
 
     if (grille(membombx)(membomby - 1) != "0")
       grille(membombx)(membomby - 1) = "r"
-
   }
 
+  //remove damage of previous bomb
   def removeDamage(): Unit = {
     if (grille(membombx)(membomby) == "r" || grille(membombx)(membomby) == "W")
       grille(membombx)(membomby) = " "
@@ -286,6 +289,8 @@ class Grid {
   var memE3x = 9
   var memE3y = 15
 
+
+  //move randomly enemy
   def moveenemy(): Unit = {
     var r = new Random()
     if (grille(memE1x)(memE1y) == "E") {
