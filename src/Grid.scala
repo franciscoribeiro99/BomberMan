@@ -21,6 +21,10 @@ class Grid {
   var memE2y = 15
   var memE3x = 9
   var memE3y = 15
+  var memx = 0
+  var memy = 0
+  var membombx = 0
+  var membomby = 0
   var timetoexplosion: Int = 0
   var grille: Array[Array[String]] = Array.ofDim(gridX, gridY)
 
@@ -62,13 +66,13 @@ class Grid {
           if (e.getKeyCode == KeyEvent.VK_RIGHT) move('d')
           if (e.getKeyCode == KeyEvent.VK_SPACE) if (timetoexplosion == 0) move('x')
         }
-        // FIXME : comment this properly
+        //permet de faire un restart quand notre jeu est gameover
         if (game_state == STATE_SHOWING_GAME_OVER) {
           if (e.getKeyCode == KeyEvent.VK_ENTER) {
             println("Enter pressed")
             game_state = STATE_PLAYING
           }
-          // FIXME : comment this properly
+          // permet d'arreter le jeu
           if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
             System.exit(-1)
           }
@@ -77,29 +81,31 @@ class Grid {
     })
   }
 
-  //InitPlaymode
+  // startplay est la fonction principale du jeu qui permet d'initialiser les variables qui en ont besoin
   def startplay(): Unit = {
     game_state = STATE_PLAYING
     timetoexplosion = 0
     grille = Array.ofDim(gridX, gridY)
 
-    //FIXME: explain all this
+    //on enregistre les positions initiales des ennemies
     memE1x = 2
     memE1y = 15
     memE2x = 5
     memE2y = 15
     memE3x = 9
     memE3y = 15
+    memx = 0
+    memy = 0
 
 
     initGrid()
     setWall()
     addPlayer()
     createEnemy()
-    setRemovalWall(10)
+    setRemovalWall(40)
     println(displayGrid())
 
-    // FIXME : comment this properly
+    // on implemente une boucle for pour permettre au ennemies de se déplacer constantement
     while (game_state == STATE_PLAYING) {
       Thread.sleep(300)
       updateGraphics()
@@ -112,7 +118,6 @@ class Grid {
     while (game_state == STATE_SHOWING_GAME_OVER) {
       Thread.sleep(300)
       println("In state STATE_SHOWING_GAME_OVER")
-      //      updateGraphics()
     }
 
   }
@@ -121,16 +126,21 @@ class Grid {
   def updateGraphics(): Unit = {
     val i1 = 50
     var NotfoundP = false
-    if (timetoexplosion >= 1)
+    // permet de commencer le compteur pour l'explosion de la bombe
+    if (timetoexplosion >= 1) {
       timetoexplosion += 1
+    }
+    // explose la bombe
     if (timetoexplosion == 8) {
       explosion()
     }
+    // on renitialise les cases explose par la bombe
     if (timetoexplosion == 10) {
       removeDamage()
-      timetoexplosion = 0
+
     }
     display.syncGameLogic(60)
+    //creations de tous les elemnts dans la fenetre
     display.frontBuffer.synchronized {
       display.clear()
       for (i <- 0 until gridX) {
@@ -154,10 +164,9 @@ class Grid {
 
       }
     }
+    // affichage du logo
     display.drawPicture(display.width / 2, 75, gameLogo)
-
-    // FIXME : COMMENT PLEASE
-    // TODO: should be done
+    //permet d'afficher l'image du gameover quand on perd
     if (!NotfoundP && game_state == STATE_PLAYING)
       game_state = STATE_SHOWING_GAME_OVER
 
@@ -186,7 +195,7 @@ class Grid {
     retS
   }
 
-  //fonction qui implemente les murs non statiques non détruisable donc pas au début de tableau
+  //fonction qui implemente les murs non statiques et détruisable donc pas au début de tableau
   def setRemovalWall(much: Int): Unit = {
     var randomX = 0
     var randomY = 0
@@ -194,7 +203,7 @@ class Grid {
     do {
       randomX = (Math.random() * gridX).toInt
       randomY = (Math.random() * gridY).toInt
-      if (grille(randomX)(randomY) != "0" && grille(randomX)(randomY) != "2" && grille(randomX)(randomY) != "E") {
+      if (grille(randomX)(randomY) != "0" && grille(randomX)(randomY) != "2" && grille(randomX)(randomY) != "E" && (randomX!=1 && randomY!=2)) {
         placesfound += 1
         grille(randomX)(randomY) = "W"
       }
@@ -218,24 +227,20 @@ class Grid {
     grille(1)(1) = "2"
   }
 
-  //fonction pour créer un énemy
+  //fonction qui initialise les ennemies
   def createEnemy(): Unit = {
-    grille(2)(15) = "E"
-    grille(5)(15) = "E"
-    grille(9)(15) = "E"
+    grille(memE1x)(memE1y) = "E"
+    grille(memE2x)(memE2y) = "E"
+    grille(memE3x)(memE3y) = "E"
   }
 
   //to move the man
-  var memx = 0
-  var memy = 0
-  var membombx = 0
-  var membomby = 0
-
   //fonction pour bouger le player
   def move(lettre: Char): Unit = {
     val read: Char = lettre
     var r = 0
     var c = 0
+    // boucle pour trouver chaque fois la position du player
     for (i <- 0 until gridX) {
       for (j <- 0 until gridY) {
         if (grille(i)(j) == "2") {
@@ -244,6 +249,7 @@ class Grid {
         }
       }
     }
+    // pour connecter les touches
     read match {
       case 'w' => if (grille(r - 1)(c) == " ") {
         grille(r - 1)(c) = "2"
@@ -277,6 +283,7 @@ class Grid {
         println("It's not possible")
       }
       case 'x' =>
+        //on place la bombe
         bomb(r, c)
         membombx = r
         membomby = c
@@ -289,11 +296,9 @@ class Grid {
   }
 
 
-  //creates a bomb
+  //creation d'une bombe
   def bomb(x: Int, y: Int): Unit = {
     grille(x)(y) = "B"
-    print(memx)
-    println(memy)
     if (memx == 0 && memy == 0)
       grille(1)(2) = "2"
     else
@@ -303,7 +308,7 @@ class Grid {
   }
 
 
-  //explosion of the bom who was planted
+  //fonction qui explose la bombe
   def explosion(): Unit = {
     grille(membombx)(membomby) = "r"
 
@@ -320,7 +325,7 @@ class Grid {
       grille(membombx)(membomby - 1) = "r"
   }
 
-  //remove damage of previous bomb
+  //efface tout ce qu'il y a autour d'une bombe sauf les murs statiques
   def removeDamage(): Unit = {
     if (grille(membombx)(membomby) == "r" || grille(membombx)(membomby) == "W")
       grille(membombx)(membomby) = " "
@@ -336,10 +341,11 @@ class Grid {
 
     if (grille(membombx)(membomby - 1) == "r" || grille(membombx)(membomby - 1) == "W")
       grille(membombx)(membomby - 1) = " "
+    timetoexplosion = 0
   }
 
 
-  //move randomly enemy
+  //bouje les ennemies avec un random en terminant le jeu s'il trouve le player
   def moveenemy(): Unit = {
     var r = new Random()
     if (grille(memE1x)(memE1y) == "E") {
