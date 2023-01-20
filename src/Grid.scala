@@ -146,7 +146,6 @@ class Grid {
       for (i <- 0 until gridX) {
         for (j <- 0 until gridY) {
           display.drawPicture(j * i1 + 25, 125 + i * i1, grass)
-          display.drawString(740, 50, "Press Enter to restart", Color.green, 20)
           if (grille(i)(j) == "2")
             NotfoundP = true
           grille(i)(j) match {
@@ -167,11 +166,15 @@ class Grid {
     // affichage du logo
     display.drawPicture(display.width / 2, 75, gameLogo)
     //permet d'afficher l'image du gameover quand on perd
-    if (!NotfoundP && game_state == STATE_PLAYING)
+    if (!NotfoundP && game_state == STATE_PLAYING) {
       game_state = STATE_SHOWING_GAME_OVER
+    }
 
-    if (game_state == STATE_SHOWING_GAME_OVER)
+    if (game_state == STATE_SHOWING_GAME_OVER) {
       display.drawPicture(display.width / 2, display.height / 2, gameoverimg)
+      display.drawString(740, 55, "Press Enter to restart", Color.BLUE, 20)
+
+    }
   }
 
 
